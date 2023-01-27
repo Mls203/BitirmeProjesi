@@ -1,0 +1,31 @@
+﻿
+@helper MenuRecursive(List<ETicaret.Entities.Categories> altcategoriler)
+{//3)
+
+    <ul class="dropdown-menu">
+        @foreach (var cat in altcategoriler)
+        {
+            if (cat.Categories1.Any())
+            {
+                <li class="dropdown-submenu">
+
+                    <a href="~/i/Index/@cat.Id">@cat.Name</a>
+                    
+                    @MenuRecursive(cat.Categories1.ToList())  @*4)submenununde alt categorileri var mı diye kontrol etmek içn recursive gönderitoruz*@
+                </li>
+            }
+            else
+            {
+             
+                <li> <a href="~/i/Index/@cat.Id">@cat.Name</a></li>
+
+            }
+
+
+        }
+
+    </ul>
+}
+
+
+

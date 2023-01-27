@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="bf56c61d604144569e86dffce729d6e4" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="ETicaretDBModel.Comments" Width="1.5" PointX="4.875" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ETicaretDBModel.MessageReplies" Width="1.5" PointX="3.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ETicaretDBModel.OrderDetails" Width="1.5" PointX="8.375" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Products" Width="1.5" PointX="6.5" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Comments_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="ETicaretDBModel.FK_OrderDetails_Products" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Categories" Width="1.5" PointX="0.5" PointY="5" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Categories_Categories" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Products_Categories" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Addresses" Width="1.5" PointX="2.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Orders" Width="1.5" PointX="2.75" PointY="9" />
+        <AssociationConnector Association="ETicaretDBModel.FK_OrderDetails_Orders" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Messages" Width="1.5" PointX="3" PointY="12.75" />
+        <AssociationConnector Association="ETicaretDBModel.FK_MessageReplies_Messages" />
+        <EntityTypeShape EntityType="ETicaretDBModel.Members" Width="1.5" PointX="10.25" PointY="5.25" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Addresses_Members" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Comments_Members" />
+        <AssociationConnector Association="ETicaretDBModel.FK_MessageReplies_Members" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Messages_Members" />
+        <AssociationConnector Association="ETicaretDBModel.FK_Orders_Members" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

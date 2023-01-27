@@ -1,0 +1,209 @@
+﻿@model List<ETicaret.Models.i.BuyModels>
+
+@{
+    ViewBag.Title = "Siparişlerim";
+    var currentUser = (ETicaret.Entities.Members)Session["LogonUser"];
+    var currentUserType = (int)currentUser.MemberType;
+}
+
+<script src="~/Scripts/jquery-3.6.1.min.js"></script>
+<h2>Sipariş Sayfası</h2>
+
+
+
+<h3>@TempData["Myerror"]</h3>
+
+<table class="table table-condensed table-striped table-hover text-center">
+
+    <thead>
+        <tr>
+          
+            @if(currentUserType > 8)
+            {
+                    <th class="text-center">Müşteri</th>
+            }
+
+            <th class="text-center">Sipariş</th>
+            <th class="text-center">Fiyat</th>
+            <th class="text-center"></th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+@foreach (ETicaret.Models.i.BuyModels item in Model)
+{
+    <tr>
+        @if (currentUserType > 8)
+        {
+            <td>
+                <a href="~/Account/Profile/@item.Member.Id" target="_blank">@item.Member.Name @item.Member.Surname</a>
+            </td>
+        }
+
+        <td>@item.OrderName</td>
+        <td>@item.TotelPrice ₺</td>
+
+        @*//sipariş verildi = SV
+    //ödeme Bildirimi = OB
+    //odeme onaylandı = OO*@
+
+        @if (item.OrderStatus == "SV")
+        {
+            <td>
+
+                <button type="button" class="btn btn-info" data-target="#orderinfo" data-toggle="modal" onclick="OpenModal('@item.OrderId' )">Ödeme Bildirimi</button>
+
+            </td>
+        }
+        else if (item.OrderStatus == "OB")
+        {
+            <td>
+                <span> Bildirim Yapıldı </span>
+            </td>
+        }
+        else if (item.OrderStatus == "OO")
+        {
+            <td>
+
+                <span> Bildirim Onaylandı </span>
+            </td>
+        }
+
+        <td>
+            <button type="button" data-target="#orderStatusinfo" data-toggle="modal" id="btn1" class="btn btn-info" data-id="@item.OrderId" onclik="ShowDes('@item.OrderId')">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+        </td>
+    </tr>
+        }
+
+    </tbody>
+</table>
+
+<div class="modal fade" id="orderinfo" tabindex="-1" role="dialog" aria-labelledby="productinfo-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="productinfo-label">Ödeme Bildirimi Bilgisi</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="orderId" value="vgg" />
+                <textarea id="orderDescription" class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+                <button type="button" id="btnBildir" class="btn btn-success">
+                    <span class="glyphicon glyphicon-bell"></span>&nbsp;Bildir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="orderStatusinfo" tabindex="-1" role="dialog" aria-labelledby="productinfo-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="productinfo-label">Sipariş Durumu</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="orderStatusId" value="vgg" />
+                <textarea id="orderStatusDes" rows="5"class="form-control" @(currentUserType < 4 ? "readonly=\"readonly\"" : "")></textarea>
+           <span>
+               <strong>Adres</strong>
+               <p id="orderAddress"></p>
+           </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+                @if (currentUserType > 3)
+                {
+                    <button type="button" id="btnSiparisTamamla" class="btn btn-success">
+                        <span class="glyphicon glyphicon-bell"></span>&nbsp;Bildir
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $("#btn1").click(function () {
+
+            var orderId = $(this).data("id");
+            //alert("bfd    " + orderId);
+            $.ajax({
+                url: "/i/GetOrder/" + orderId,
+                method: "GET",
+                async: true,
+                success: function (data) {
+
+                    $("#orderStatusId").val(orderId);
+                    $("#orderStatusDes").val(data.Description);
+                    $("#orderAddress").text(data.Address);
+                },
+                error: function (err) {
+                    console.log("Hata", err);
+                }
+            });
+        });
+            
+
+        $("#btnSiparisTamamla").click(function () {
+            $.ajax({
+                url: "/i/OrderCompilete/" + $("#orderStatusId").val(),
+                method: "POST",
+                data: { text: $("#orderStatusDes").val() },
+                async: true,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (err) {
+                    console.log("Hata", err);
+                }
+            });
+        });
+    });
+
+    function OpenModal(orderId) {
+
+
+        $("#orderId").val(orderId);
+    }
+
+    $(function () {
+
+        $("#btnBildir").click(function () {
+
+            var orderId = $("#orderId").val();
+            var orderDes = $("#orderDescription").val();
+            var model = { OrderId: orderId, OrderDes: orderDes };
+            $.ajax({
+                url: "/i/OrderNotification", //bu sayfaya datalarımı gönderercem
+                method: "POST",
+                data: { model: model },
+                async: true,
+                success: function (data) {
+                    //alert("Ödeme Bildirimi Gerçekleştirdi");
+
+                    location.reload();
+                },
+                error: function (err) {
+                    console.log("hata", err);
+                }
+            });
+        });
+
+    });
+
+
+
+</script>

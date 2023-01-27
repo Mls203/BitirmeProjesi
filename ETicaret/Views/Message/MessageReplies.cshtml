@@ -1,0 +1,107 @@
+﻿@model ETicaret.Models.Message.MessageReplies
+
+@{
+    ViewBag.Title = "Mesaj Cevapları";
+    var currentUser = (ETicaret.Entities.Members)Session["LogonUser"];
+    var defaultImage = "images/account64.png";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Konu : @Model.MReplice.FirstOrDefault().Messages.Subject</h3>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var msj in Model.MReplice)
+    {
+        if (msj.Member_Id == currentUser.Id)
+        {
+
+            <div class="col-md-9 col-md-push-1 col-md-offset-1 well well-empty">
+
+                <div class="col-md-1">
+                    <a href="~/Account/Profile/@msj.Member_Id">
+                        <img src="~/@(string.IsNullOrEmpty(msj.Members.ProfileImageName)?defaultImage:msj.Members.ProfileImageName)" class="img img-circle img-responsive" style="height: 50px; width: 300px;" />
+                    </a>
+
+                </div>
+                <div class="col-md-11">
+                    <label class="col-md-2 text-danger">Tarih : </label>
+                    <label class="col-md-10 text-info">@msj.AddedDate.ToString("dd.MM.yyyyy hh:mm")</label>
+
+
+
+                    <label class="col-md-2 text-danger">Kimden : </label>
+                    <label class="col-md-10 text-warning">@(string.Format("{0} {1} ",msj.Members.Name,msj.Members.Surname))</label>
+
+
+
+                    <label class="col-md-2 text-danger">Mesaj : </label>
+                    <label class="col-md-10">
+                        @msj.Text
+                    </label>
+                </div>
+
+
+
+            </div>
+        }
+        else
+        {
+            <div class="col-md-9 col-md-push-1 col-md-offset-1 well well-empty">
+                <div class="form-group">
+                    <img src="~/images/account64.png" class="img img-circle img-responsive" />
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 text-danger">Tarih : </label>
+                    <label class="col-md-10 text-info">@msj.AddedDate.ToString("dd.MM.yyyyy hh:mm")</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 text-danger">Kimden : </label>
+                    <label class="col-md-10 text-warning">@(string.Format("{0} {1} ",msj.Members.Name,msj.Members.Surname))</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 text-danger">Mesaj : </label>
+                    <label class="col-md-10">
+                        @msj.Text
+                    </label>
+                </div>
+
+            </div>
+        }
+    }
+
+
+
+</div>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="form-group">
+                <h4>Mesaj Cevabı</h4>
+                <hr />
+            </div>
+            @Html.Hidden("MessageId", Model.MReplice.FirstOrDefault().Messages.Id)
+            <div class="form-group">
+                @Html.TextArea("Text", new { placeholder = "Message Text", @class = "form-control" })
+
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">
+                    <span class="glyphicon glyphicon-send"></span> Cevapla
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+

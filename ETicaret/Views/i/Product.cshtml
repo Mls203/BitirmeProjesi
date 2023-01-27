@@ -1,0 +1,136 @@
+﻿@model ETicaret.Models.i.ProductModel
+@{
+    ViewBag.Title = "Product";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <br />
+        @{
+            if (string.IsNullOrEmpty(Model.Product.ProductImageName))
+            {
+
+
+                Model.Product.ProductImageName = "http://placehold.jp/250x250.png";
+            }
+        }
+
+        <center><img src="@Model.Product.ProductImageName" class="img-responsive img-thumbnail"/></center>
+    </div>
+    <div class="col-md-8">
+
+        <div class="form-group row">
+
+            <div class="col-md-6">
+                <h2>@Model.Product.Name</h2>
+               
+            </div>
+            <div class="col-md-6 text-right">
+                <h2 class="text-danger">@Model.Product.Price ₺</h2>
+                
+            </div>
+
+        </div>
+      
+        <div class="form-group">
+            @Model.Product.Description
+        </div>
+
+        <div class="form-group">
+            <span class="text-danger">Derecelendirme :&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-warning">
+                @{
+                    int sayi = Model.Product.StarPoint;
+                    for (int i = 0; i < sayi; i++)
+                    {
+                        <span class="glyphicon glyphicon-star"></span>
+                    }
+                    for (int i = 0; i < 5 - sayi; i++)
+                    {
+                        <span class="glyphicon glyphicon-star-empty"></span>
+
+                    }
+
+                }
+
+                &nbsp (@Model.Product.StarGivenMemberCount)
+            </span>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-8 col-md-push-4">
+
+        <div class="form-group">
+            <h3>Comments</h3>
+            <hr />
+        </div>
+
+        <div class="form-group">
+            <ul class="media-list">
+                @foreach (var item in Model.Product.Comments.OrderByDescending(x => x.AddedDate))//yorumlaryorumlar üzerinde geziniyorum güncel olanı en ğstte gösteriyorum
+                {
+
+
+                    <li class="media">
+                        <div class="media-left">
+                            @*TODO:PROFİLE GİDECEK*@
+                            <a href="~/Account/Profile/@item.Member_Id">
+
+                                @{
+                                    //burda sayfanın basşında göndediğim model üzerinde işlem yapıyorum
+                                    if (string.IsNullOrEmpty(item.Members.ProfileImageName))
+                                    {
+                                        item.Members.ProfileImageName = "Images/account64.png";
+
+                                    }
+
+                                }
+
+                                <img class="media-object img-circle img-thumbnail" src="~/@item.Members.ProfileImageName"  style="width:64px;">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">@(item.Members.Name+" "+ @item.Members.Surname)</h4>
+                            @item.Text
+                        </div>
+                    </li>
+                }
+
+
+            </ul>
+        </div>
+        @{
+            if (Session["LogonUser"] != null)//oturum var ise kullanıcı yorum yazabilir
+            {
+                using (Html.BeginForm())
+                {
+                    @Html.Hidden("Product_Id", Model.Product.Id)<div class="form-group">
+                        @{
+                            if (ViewBag.message != null)
+                            {
+                                <div class="alert alert-danger">@ViewBag.message</div>
+                            }
+                        }
+
+                        <textarea cols="30" rows="3" id="Text" name="Text" class="form-control" placeholder="Enter your comments" maxlength="255"></textarea>
+                    </div>
+
+                    <div class="form-group text-right">
+                        <button class="btn btn-success" type="submit">
+                            <span class="glyphicon glyphicon-send"></span> Send
+                        </button>
+                    </div>
+                }
+
+            }
+
+        }
+
+
+    </div>
+</div>

@@ -1,0 +1,80 @@
+﻿@model ETicaret.Models.Account.RegisterModel
+@{
+    ViewBag.Title = "Register";
+}
+
+
+
+
+@using (Html.BeginForm())
+{<div class="row">
+        <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+
+            <form>
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h2>Register</h2>
+
+                        @{
+                            if (ViewBag.ReError != null)
+                            {
+                                <div class="alert alert-danger">@ViewBag.ReError</div>
+
+                            }
+                            else
+                            {
+                                <div>Please enter e-mail and password.</div>
+
+                            }
+                        }
+
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <center>
+
+                                <img src="https://placehold.jp/125x125.png" class="img-circle img-responsive" />
+                            </center>
+                        </div>
+                    
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Member.Name, new { @class = "form-control", type = "text", placeholder = "Name", required = "required" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Member.Surname, new { @class = "form-control", type = "text", placeholder = "Surname" , required = "required" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Member.Email, new { @class = "form-control", type = "email", placeholder = "e-mail address" , required = "required" })
+                            @*<input type="email" name="email" id="email" placeholder="e-mail address" />*@
+                        </div>
+
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Member.Password, new { @class = "form-control", type = "password", placeholder = "password" , required = "required" })
+                            @*<input type="password" name="password1" id="password1" placeholder="password" class="form-control" />*@
+                        </div>
+
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.repasword, new { @class = "form-control", type = "password", placeholder = "repassword", required = "required" })
+                            @*<input type="password" name="password2" id="password2" placeholder="re-password" class="form-control" />*@
+                        </div>
+
+                    </div>
+                    <div class="panel-footer text-right">
+                        <a href="Login" class="btn btn-info">
+                            <span class="glyphicon glyphicon-log-in"></span> Login
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <span class="glyphicon glyphicon-floppy-saved"></span> Register
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+}
+
+
+

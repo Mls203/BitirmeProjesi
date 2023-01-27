@@ -1,0 +1,240 @@
+﻿@model ETicaret.Models.Account.ProfileModel
+
+@{
+    ViewBag.Title = string.Format("{0}{1}", Model.Member.Name, Model.Member.Surname);
+    Model.Member.ProfileImageName = string.IsNullOrEmpty(Model.Member.ProfileImageName) ? "Images/account64.png" : Model.Member.ProfileImageName;
+    var currentUser = ((ETicaret.Entities.Members)Session["LogonUser"]);
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Profil Sayfası</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <center><img src="~/@Model.Member.ProfileImageName" class="img-circle img-responsive img-thumbnail" style="width:200px; height:200px" /></center>
+    </div>
+    <div class="col-md-8 well">
+
+        <div class="form-group">
+
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 text-danger"> Name: </label>
+            <label class="col-md-10">@Model.Member.Name</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 text-danger">Surname : </label>
+            <label class="col-md-10">@Model.Member.Surname</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 text-danger">Email : </label>
+            <label class="col-md-10">@Model.Member.Email</label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 text-danger">Bio : </label>
+            <label class="col-md-10">
+                @{
+                    Model.Member.Bio = String.IsNullOrEmpty(Model.Member.Bio) ? "&nbsp" : Model.Member.Bio;
+
+                    @Model.Member.Bio
+                }
+
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 text-danger">Kayıt Tarihi : </label>
+            <label class="col-md-10">@Model.Member.AddedDate.ToShortDateString()</label>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @{
+                   
+                    if (Session["LogonUser"] != null && (currentUser.Id == Model.Member.Id))
+
+                    {
+
+
+            <div class="col-md-10 col-md-offset-1 text-right">
+                @{
+                    var deneme1 = currentUser.MemberType;
+                var deneme = (int)currentUser.MemberType;
+            }
+            @if (((int)currentUser.MemberType) > 3)
+                {
+                    <a href="~/Category/i" class="btn btn-info">
+                        <span class="glyphicon glyphicon-plus"></span> Kategoriler
+                    </a>
+                    <a href="~/Product/i" class="btn btn-info">
+                        <span class="glyphicon glyphicon-puls"></span> Ürünler
+                    </a>
+        }
+                <a href="~/Account/ProfileEdit" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-edit"></span> Düzenle
+                </a>
+
+                <a href="#" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span> Sil
+                </a>
+            </div>
+            <div class="col-md-12">
+                &nbsp;
+            </div>
+        }
+        if (Model.Addresses!=null)//adres yoksa false döner
+        {
+            <div class="row ">
+                <div class="col-md-3"></div>
+                <div class="col-md-8">
+                    <table class="table table-condensed table-striped table-hover text-center">
+
+                        <thead>
+                            <tr>
+                                <!--th*4>{kolon adı}-->
+                                <th class="text-center">Adres Adı</th>
+                                <th class="text-center">Adres Açıklaması</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.Addresses)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.AdresDescription</td>
+                                    <td>
+                                        <a href="~/Account/Profile?ad=@item.Id.ToString()" class="btn btn-info btn-xs">
+                                            <span class="glyphicon glyphicon-edit"></span>
+
+                                        </a>
+                                        <a href="~/Account/RemoveAdress/@item.Id.ToString()" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                    @using (Html.BeginForm("Adress", "Account"))
+                    {
+
+            @Html.Hidden("Id", Model.CurrentAddress.Id.ToString())
+            <div class="form-group">
+
+                @Html.TextBox("Name", Model.CurrentAddress.Name, new { @class = "form-control", placeholder = "Adres Adı" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.TextBox("AdresDescription", Model.CurrentAddress.AdresDescription, new { @class = "form-control", placeholder = "Adresiniz" })
+            </div>
+
+
+            <div class="form-group">
+
+                <button type="submit" class="btn btn-success ">Kaydet</button>
+
+            </div>
+                    }
+
+
+
+
+
+                </div>
+            </div>
+
+
+        }
+        else
+        {
+            <div class="row ">
+                <div class="col-md-3"></div>
+                <div class="col-md-8">
+                    <table class="table table-condensed table-striped table-hover text-center">
+
+                        <thead>
+                            <tr>
+                                <!--th*4>{kolon adı}-->
+                                <th class="text-center">Adres Adı</th>
+                                <th class="text-center">Adres Açıklaması</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.Addresses)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.AdresDescription</td>
+                                    <td>
+                                        <a href="~/Account/Profile?ad=@item.Id.ToString()" class="btn btn-info btn-xs">
+                                            <span class="glyphicon glyphicon-edit"></span>
+
+                                        </a>
+                                        <a href="~/Account/RemoveAdress/@item.Id.ToString()" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                    @using (Html.BeginForm("Adress", "Account"))
+                    {
+
+            @Html.Hidden("Id", Model.CurrentAddress.Id.ToString())
+            <div class="form-group">
+
+                @Html.TextBox("Name", Model.CurrentAddress.Name, new { @class = "form-control", placeholder = "Adres Adı" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.TextBox("AdresDescription", Model.CurrentAddress.AdresDescription, new { @class = "form-control", placeholder = "Adresiniz" })
+            </div>
+
+
+            <div class="form-group">
+
+                <button type="submit" class="btn btn-success ">Kaydet</button>
+
+            </div>
+                    }
+
+
+                </div>
+            </div>
+        }
+
+    }
+
+
+
+</div>
+

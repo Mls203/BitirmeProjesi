@@ -1,0 +1,32 @@
+﻿@model List<ETicaret.Entities.Categories>
+
+<ul class="nav navbar-nav">
+
+    @foreach (var cat in Model)
+    {
+        if (cat.Categories1.Any())//boş değilse true döner
+        {
+
+          
+
+            <li class="dropdown">
+
+                <a href="~/i/Index/@cat.Id">
+                    @cat.Name <span class="caret"></span>
+                </a>
+                @* kendi helper methodumuzu oluşturduk (helper methodları App_Code içine yazılmalikisayfa görsün) *@
+                @_MenuHelper.MenuRecursive(cat.Categories1.ToList())
+
+            </li>
+
+        }
+        else
+        {
+            <li><a href="~/i/Index/@cat.Id">@cat.Name</a></li>
+
+        }
+
+
+    }
+
+</ul>

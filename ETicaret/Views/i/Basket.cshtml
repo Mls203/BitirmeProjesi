@@ -1,0 +1,115 @@
+﻿@model List<ETicaret.Models.i.BasketModels>
+@{
+    ViewBag.Title = "Sepet";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Sepetiniz</h3>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @if (TempData["Error"] != null)
+        {
+            <div stye="color:red;" class="alert alert-danger">@TempData["Error"] </div>
+        }
+        @using (Html.BeginForm("Buy", "i"))
+        {
+            <table class="table table-condensed table-striped table-hover text-center">
+
+                <thead>
+                    <tr>
+                        <!--th*4>{kolon adı}-->
+                        <th class="text-center">Urun Adı</th>
+                        <th class="text-center">Fiyat</th>
+                        <th class="text-center">Adet</th>
+                        <th class="text-center">Tutar</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!--tr*4>(td>lorem2)+(td>{10.00 ₺})+(td>{1})+(td>button.btn>span.glyphicon)-->
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Product.Name</td>
+                            <td>@item.Product.Price ₺</td>
+                            <td>@item.Count</td>
+                            <td>@(item.Product.Price * item.Count)</td>
+                            <td>
+                                <a href="~/i/AddBasket/@item.Product.Id" class="btn btn-warning btn-xs">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                                <a href="~/i/AddBasket/@item.Product.Id?remove=true" class="btn btn-info btn-xs">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </a>
+                                &nbsp;|&nbsp;
+                                <a href="~/i/Product/@item.Product.Id" class="btn btn-info btn-xs">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                                <a href="~/i/RemoveBasket/@item.Product.Id" class="btn btn-danger btn-xs">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+
+                    }
+
+
+                </tbody>
+
+                <tfoot>
+
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td class="text-center text-danger">
+                            <h2>&nbsp;@ViewBag.Total ₺</h2> <span></span>
+                        </td>
+                        <td>
+                            <br />
+                            <a href="~/i/RemoveBasket/0 " class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-trash"></span> Sepeti Boşalt
+                            </a>
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <span class="glyphicon glyphicon-send"></span> Satın Al
+                            </button>
+                        </td>
+                    </tr>
+                    @if (ViewBag.CurrentAddress != null && ((List<SelectListItem>)ViewBag.CurrentAddress) != null)
+                    {
+
+
+
+                        <tr>
+                            <td>
+                                @Html.Label("Address", "Adres Seçiniz:")
+                            </td>
+                            <td colspan="6">
+                                @*DropDownList ten gelen (value) adresin idsini alıyoruz*@
+                                @Html.DropDownList("Address", (List<SelectListItem>)ViewBag.CurrentAddress, new { @class = "form-control" })
+                            </td>
+                        </tr>
+                    }
+                </tfoot>
+
+            </table>
+        }
+
+
+
+    </div>
+</div>
+
